@@ -7,8 +7,34 @@ export const countAllUsers = async(req:Request,res:Response)=>{
 }
 
 export const findAllMovie =async(req:Request,res:Response) =>{
-    const {limit ="10",skip ="0"} =req.query
-    const result :IMovie[]=await MovieModel.find({}).limit(Number(limit)).skip(Number(skip))
+    const {limit ="10",skip ="0",ordering="releasedAsc"} =req.query
+    console.log("ordering",ordering);
+    let sort=""
+    switch (ordering){
+        case "releasedAsc":
+        sort="released"
+        break;
+        case "releasedDesc":
+        sort='-released'
+         break;
+        case "imdbRatingDesc":
+        sort="-awards.wins"       
+        break;
+        case "TitleDesc":
+        sort="-title"       
+        break;
+        case "TitleAsc":
+        sort="title"       
+        break;
+        default:
+        sort="released"
+        break;
+     
+    }
+    console.log("ordering",sort);
+    
+    
+    const result :IMovie[]=await MovieModel.find({}).sort(sort).limit(Number(limit)).skip(Number(skip))
    res.json(result)
 }
 

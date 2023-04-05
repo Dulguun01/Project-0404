@@ -19,8 +19,31 @@ const countAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.countAllUsers = countAllUsers;
 const findAllMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { limit = "10", skip = "0" } = req.query;
-    const result = yield movieModel_1.default.find({}).limit(Number(limit)).skip(Number(skip));
+    const { limit = "10", skip = "0", ordering = "releasedAsc" } = req.query;
+    console.log("ordering", ordering);
+    let sort = "";
+    switch (ordering) {
+        case "releasedAsc":
+            sort = "released";
+            break;
+        case "releasedDesc":
+            sort = '-released';
+            break;
+        case "imdbRatingDesc":
+            sort = "-awards.wins";
+            break;
+        case "TitleDesc":
+            sort = "-title";
+            break;
+        case "TitleAsc":
+            sort = "title";
+            break;
+        default:
+            sort = "released";
+            break;
+    }
+    console.log("ordering", sort);
+    const result = yield movieModel_1.default.find({}).sort(sort).limit(Number(limit)).skip(Number(skip));
     res.json(result);
 });
 exports.findAllMovie = findAllMovie;
