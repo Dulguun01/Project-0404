@@ -50,13 +50,23 @@ exports.findAllMovie = findAllMovie;
 const findMovieById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { _id } = req.params;
     const result = yield movieModel_1.default.findById(_id);
-    res.json(result);
+    try {
+        res.json(result);
+    }
+    catch (error) {
+        console.log(error);
+    }
 });
 exports.findMovieById = findMovieById;
 const createMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // const body = req.body;
     const newUser = yield movieModel_1.default.create(req.body);
-    res.json(newUser);
+    try {
+        res.json(newUser);
+    }
+    catch (error) {
+        console.log(error);
+    }
 });
 exports.createMovie = createMovie;
 const updateMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -65,12 +75,22 @@ const updateMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     const body = req.body;
     console.log(body);
     const result = yield movieModel_1.default.findByIdAndUpdate(_id, body, { new: true });
-    res.json(result);
+    try {
+        res.json(result);
+    }
+    catch (error) {
+        console.log(error);
+    }
 });
 exports.updateMovie = updateMovie;
 const deleteMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { _id } = req.params;
     const result = yield movieModel_1.default.findByIdAndDelete(_id);
-    res.json(result);
+    try {
+        res.json(result);
+    }
+    catch (error) {
+        console.log(error);
+    }
 });
 exports.deleteMovie = deleteMovie;

@@ -42,14 +42,30 @@ export const findMovieById = async(req:Request,res:Response)=>{
     const {_id} =req.params
 
     const result: IMovie | null=await MovieModel.findById(_id)
-    res.json(result)
+    try {
+        res.json(result)
+        
+    } catch (error) {
+        console.log(error);
+        
+        
+    }
+    
 }
 
 export const createMovie = async(req:Request,res:Response)=>{
     // const body = req.body;
     
     const newUser  =await MovieModel.create(req.body)
-    res.json(newUser)
+    try {
+        res.json(newUser)
+        
+    } catch (error) {
+        console.log(error);
+        
+        
+    }
+    
 }
 export const updateMovie = async(req:Request,res:Response)=>{
     const {_id} =req.params
@@ -59,12 +75,28 @@ export const updateMovie = async(req:Request,res:Response)=>{
     const body =req.body;
     console.log(body)
     const result=await MovieModel.findByIdAndUpdate(_id,body ,{new:true})
+    try {
     res.json(result)
+
+        
+    } catch (error) {
+        console.log(error);
+        
+        
+    }
 }
 
 export const deleteMovie =async(req:Request,res:Response)=>{
     const {_id} =req.params
     const result:IMovie | null =await MovieModel.findByIdAndDelete(_id)
+    try {
     res.json(result)
+
+        
+    } catch (error) {
+        console.log(error);
+        
+        
+    }
 }
 
