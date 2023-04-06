@@ -19,7 +19,7 @@ const countAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.countAllUsers = countAllUsers;
 const findAllMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { limit = "10", skip = "0", ordering = "releasedAsc" } = req.query;
+    const { limit = "10", skip = "0", ordering = "releasedAsc", search } = req.query;
     console.log("ordering", ordering);
     let sort = "";
     switch (ordering) {
@@ -42,8 +42,8 @@ const findAllMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             sort = "released";
             break;
     }
-    console.log("ordering", sort);
-    const result = yield movieModel_1.default.find({}).sort(sort).limit(Number(limit)).skip(Number(skip));
+    console.log("q", q);
+    const result = yield movieModel_1.default.find({ title: { $regex: new RegExp(`${q}`) } }).sort(sort).limit(Number(limit)).skip(Number(skip));
     res.json(result);
 });
 exports.findAllMovie = findAllMovie;

@@ -7,7 +7,7 @@ export const countAllUsers = async(req:Request,res:Response)=>{
 }
 
 export const findAllMovie =async(req:Request,res:Response) =>{
-    const {limit ="10",skip ="0",ordering="releasedAsc"} =req.query
+    const {limit ="10",skip ="0",ordering="releasedAsc" ,search} =req.query
     console.log("ordering",ordering);
     let sort=""
     switch (ordering){
@@ -31,10 +31,12 @@ export const findAllMovie =async(req:Request,res:Response) =>{
         break;
      
     }
-    console.log("ordering",sort);
+    console.log("q",q);
+    
+
     
     
-    const result :IMovie[]=await MovieModel.find({}).sort(sort).limit(Number(limit)).skip(Number(skip))
+    const result :IMovie[]=await MovieModel.find({title:{$regex:new RegExp(`${q}`)}}).sort(sort).limit(Number(limit)).skip(Number(skip))
    res.json(result)
 }
 
