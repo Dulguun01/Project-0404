@@ -12,14 +12,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteMovie = exports.updateMovie = exports.createMovie = exports.findMovieById = exports.findAllMovie = exports.countAllUsers = void 0;
+exports.deleteMovie = exports.updateMovie = exports.createMovie = exports.findMovieById = exports.findAllMovie = exports.findAllMovieIds = exports.countAllUsers = void 0;
 const movieModel_1 = __importDefault(require("../models/movieModel"));
 const countAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.json(yield movieModel_1.default.count({}));
 });
 exports.countAllUsers = countAllUsers;
+const findAllMovieIds = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield movieModel_1.default.find().select({ id: 1 });
+    res.json(result.map((movieId) => movieId._id));
+});
+exports.findAllMovieIds = findAllMovieIds;
 const findAllMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { limit = "10", skip = "0", ordering = "releasedAsc", search = "" } = req.query;
+    const { limit = "10", skip = "0", ordering = "releasedAsc", filter = "", search = "", } = req.query;
     console.log("ordering", ordering);
     let sort = "";
     switch (ordering) {
@@ -27,7 +32,7 @@ const findAllMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             sort = "released";
             break;
         case "releasedDesc":
-            sort = '-released';
+            sort = "-released";
             break;
         case "imdbRatingDesc":
             sort = "-awards.wins";
@@ -43,7 +48,18 @@ const findAllMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             break;
     }
     console.log("search", search);
-    const result = yield movieModel_1.default.find({ title: { $regex: new RegExp(`${search}`) } }).sort(sort).limit(Number(limit)).skip(Number(skip));
+    const condition = {};
+    if (filter) {
+        condition.genres = { $regex: new RegExp(`${filter}`, "i") };
+    }
+    console.log(filter);
+    if (search) {
+        condition.title = { $regex: new RegExp(`${search}`, "i") };
+    }
+    const result = yield movieModel_1.default.find(condition)
+        .sort(sort)
+        .limit(Number(limit))
+        .skip(Number(skip));
     res.json(result);
 });
 exports.findAllMovie = findAllMovie;
