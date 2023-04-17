@@ -24,8 +24,7 @@ const findAllMovieIds = (req, res) => __awaiter(void 0, void 0, void 0, function
 });
 exports.findAllMovieIds = findAllMovieIds;
 const findAllMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { limit = "10", skip = "0", ordering = "releasedAsc", filter = "", search = "", } = req.query;
-    console.log("ordering", ordering);
+    const { limit = 0, page = 0, ordering = "releasedAsc", filter = "", search = "", } = req.query;
     let sort = "";
     switch (ordering) {
         case "releasedAsc":
@@ -47,12 +46,12 @@ const findAllMovie = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             sort = "released";
             break;
     }
-    console.log("search", search);
     const condition = {};
     if (filter) {
         condition.genres = { $regex: new RegExp(`${filter}`, "i") };
     }
-    console.log(filter);
+    console.log("page", page);
+    const skip = Number(limit * page);
     if (search) {
         condition.title = { $regex: new RegExp(`${search}`, "i") };
     }

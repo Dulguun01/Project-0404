@@ -11,13 +11,12 @@ export const findAllMovieIds = async (req: Request, res: Response) => {
 };
 export const findAllMovie = async (req: Request, res: Response) => {
   const {
-    limit = "10",
-    skip = "0",
+    limit = 0,
+    page = 0,
     ordering = "releasedAsc",
     filter = "",
     search = "",
   } = req.query;
-  console.log("ordering", ordering);
   let sort = "";
   switch (ordering) {
     case "releasedAsc":
@@ -39,12 +38,12 @@ export const findAllMovie = async (req: Request, res: Response) => {
       sort = "released";
       break;
   }
-  console.log("search", search);
   const condition: any = {};
   if (filter) {
     condition.genres = { $regex: new RegExp(`${filter}`, "i") };
   }
-  console.log(filter);
+  console.log("page", page);
+  const skip = Number(limit * page);
 
   if (search) {
     condition.title = { $regex: new RegExp(`${search}`, "i") };
@@ -54,6 +53,7 @@ export const findAllMovie = async (req: Request, res: Response) => {
     .sort(sort)
     .limit(Number(limit))
     .skip(Number(skip));
+
   res.json(result);
 };
 
